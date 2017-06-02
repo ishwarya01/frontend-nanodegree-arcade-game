@@ -1,13 +1,13 @@
 //Global variables for player and enemy
-var playerX = 202; // Player reset position X coordinate
-var playerY = 404; // Player reset position X coordinate
-var cellWidth = 101; // Board each cell width
-var cellHeight = 83; // Board each cell Height
-var enemySpeed = 400; // Speed of the enemy bug
-var boardTopLeftX = 0;
-var boardTopLeftY = 55;
-var numRows = 5;
-var numCols = 5;
+var PLAYER_X = 202; // Player reset position X coordinate
+var PLAYER_Y = 404; // Player reset position X coordinate
+var CELL_WIDTH = 101; // Board each cell width
+var CELL_HEIGHT = 83; // Board each cell Height
+var ENEMY_SPEED = 400; // Speed of the enemy bug
+var BOARD_TOPLEFTX = 0;
+var BOARD_TOPLEFTY  = 55;
+var NUM_ROWS = 5;
+var NUM_COLS = 5;
 
 // Get random integer to generate enemy at a random location
 var getRandomInt = function(rangeStart, rangeEnd) {
@@ -17,11 +17,11 @@ var getRandomInt = function(rangeStart, rangeEnd) {
 // Given a row, col position, this function returns the exact
 // location of that coordinate in the board
 var getGridPos = function(row, col) {
-var boardX = boardTopLeftX + (col * cellWidth);
-var boardY = boardTopLeftY + (row * cellHeight);
-return {
-    posX: boardX,
-    posY: boardY
+    var boardX = BOARD_TOPLEFTX + (col * CELL_WIDTH);
+    var boardY = BOARD_TOPLEFTY + (row * CELL_HEIGHT);
+    return {
+        posX: boardX,
+        posY: boardY
     };
 };
 
@@ -37,8 +37,8 @@ var Enemy = function() {
 Enemy.prototype.init = function() {
     this.sprite = 'images/enemy-bug.png'; // The image/sprite for enemies, this uses
     // a helper to easily load images
-    var colIndex= getRandomInt(0, numCols-1); // Get random column
-    var rowIndex = getRandomInt(0, numRows-1); // Get random row
+    var colIndex= getRandomInt(0, NUM_COLS-1); // Get random column
+    var rowIndex = getRandomInt(0, NUM_ROWS-1); // Get random row
     var pos = getGridPos(rowIndex, colIndex); // Get position based on above
     // Set enemy's x and y coordinates
     this.x = pos.posX;
@@ -49,10 +49,10 @@ Enemy.prototype.init = function() {
 // Parameter: dt, a time delta between ticks
 Enemy.prototype.update = function(dt) {
     this.checkCollision(player);
-    this.x = this.x + (dt * enemySpeed * Math.random());
+    this.x = this.x + (dt * ENEMY_SPEED * Math.random());
     // Resets enemy after reaching end of board
-    if (this.x > numCols*cellWidth) {
-        this.x = boardTopLeftX;
+    if (this.x > NUM_COLS * CELL_WIDTH) {
+        this.x = BOARD_TOPLEFTX;
     }
 };
 
@@ -76,75 +76,75 @@ Enemy.prototype.checkCollision = function(player) {
 /*PLAYER RELATED METHODS END*/
 var Player = function() {
     this.sprite = 'images/char-boy.png';
-    this.x = playerX;
-    this.y = playerY;
+    this.x = PLAYER_X;
+    this.y = PLAYER_Y;
 };
 
 // Reset Player method
 Player.prototype.reset = function() {
-    this.x = playerX;
-    this.y = playerY;
+    this.x = PLAYER_X;
+    this.y = PLAYER_Y;
 };
 
 // Method to move player up for 'up' key
 Player.prototype.moveUp = function() {
-    if(this.y <= boardTopLeftY + cellHeight) { // Checks if player is off the Board
+    if(this.y <= BOARD_TOPLEFTY + CELL_HEIGHT) { // Checks if player is off the Board
         this.reset();
     }
     else {
-        this.y -= cellHeight;
+        this.y -= CELL_HEIGHT;
     }
 };
 
 // Method to move player down for 'down' key
 Player.prototype.moveDown = function() {
-    if(this.y >= (boardTopLeftY + ((numRows-1) * cellHeight))) { // Checks if player is off the Board
+    if(this.y >= (BOARD_TOPLEFTY + ((NUM_ROWS-1) * CELL_HEIGHT))) { // Checks if player is off the Board
         this.reset();
     }
     else {
-        this.y = this.y + cellHeight;
+        this.y = this.y + CELL_HEIGHT;
     }
 };
 
 // Method to move player left for 'left' key
 Player.prototype.moveLeft = function() {
-    if(this.x <= boardTopLeftX) { // Checks if player is off the Board
+    if(this.x <= BOARD_TOPLEFTX) { // Checks if player is off the Board
         this.reset();
     }
     else {
-        this.x = this.x - cellWidth;
+        this.x = this.x - CELL_WIDTH;
     }
 };
 
 // Method to move player right for 'right' key
 Player.prototype.moveRight = function() {
-    if(this.x >= (boardTopLeftX + ((numCols-1) * cellWidth))) { // Checks if player is off the Board
+    if(this.x >= (BOARD_TOPLEFTX + ((NUM_COLS-1) * CELL_WIDTH))) { // Checks if player is off the Board
         this.reset();
     }
     else {
-        this.x = this.x + cellWidth;
+        this.x = this.x + CELL_WIDTH;
     }
 };
 
 // Method to draw the Player on the screen
 Player.prototype.render = function() {
     ctx.drawImage(Resources.get(this.sprite), this.x, this.y);
-}
+};
 
 // Method to handle key input based on direction
 Player.prototype.handleInput = function(key) {
     switch (key) {
         case 'up':
-            player.moveUp();
+            this.moveUp();
             break;
         case 'down':
-            player.moveDown();
+            this.moveDown();
             break;
         case 'left':
-            player.moveLeft();
+            this.moveLeft();
             break;
         case 'right':
-            player.moveRight();
+            this.moveRight();
             break;
     }
 };
